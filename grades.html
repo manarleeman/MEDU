@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Education System - Dashboard</title>
+    <title>Medical Education System - Grades</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* General Styles */
@@ -70,6 +70,10 @@
             overflow: hidden;
             border-radius: 50%;
             margin-right: 10px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .avatar img {
@@ -171,6 +175,12 @@
             text-decoration: none;
         }
 
+        .submenu a.active {
+            background-color: #e3f2fd;
+            color: #2d7dd2;
+            font-weight: bold;
+        }
+
         .sidebar-footer {
             padding: 20px;
             text-align: center;
@@ -252,56 +262,52 @@
             text-decoration: none;
         }
 
-        /* Committees Section */
-        .section {
-            margin: 0 20px 20px;
+        /* Grades Section */
+        .grades-container {
+            margin: 20px;
             background-color: white;
             border-radius: 5px;
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .section-header {
-            padding: 15px 20px;
-            background-color: #2d7dd2;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-header i {
-            margin-right: 10px;
-        }
-
-        .committees-table {
-            padding: 0;
-        }
-
-        .committees-table table {
+        .grades-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .committees-table th, 
-        .committees-table td {
+        .grades-table th {
+            background-color: #e3f2fd;
+            color: #1976d2;
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            border-bottom: 2px solid #bbdefb;
         }
 
-        .committees-table th {
-            background-color: #f5f5f5;
-            font-weight: 600;
+        .grades-table th:last-child {
+            text-align: right;
+        }
+
+        .grades-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
             color: #333;
         }
 
-        .committees-table tr:last-child td {
+        .grades-table td:last-child {
+            text-align: right;
+        }
+
+        .grades-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .grades-table tr:last-child td {
             border-bottom: none;
         }
 
-        .show-btn {
+        .show-dropdown {
             background-color: #2d7dd2;
             color: white;
             border: none;
@@ -311,64 +317,23 @@
             display: flex;
             align-items: center;
             font-size: 14px;
+            gap: 5px;
+            margin-left: auto;
+            transition: background-color 0.3s ease;
         }
 
-        .show-btn i {
-            margin-left: 5px;
-        }
-
-        .show-btn:hover {
+        .show-dropdown:hover {
             background-color: #1c6abd;
         }
 
-        /* Quick Links */
-        .quick-links {
-            display: flex;
-            gap: 15px;
-            margin: 0 20px 20px;
-        }
-
-        .quick-link {
-            flex: 1;
-            padding: 15px;
-            background-color: #5bc0de;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-
-        .quick-link:hover {
-            background-color: #46b8da;
-        }
-
-        /* Announcements Section */
-        .announcements {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .all-announcements {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-        }
-
-        .all-announcements a {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 4px;
+        .show-dropdown i {
             font-size: 12px;
         }
 
-        .all-announcements i {
-            margin-left: 5px;
+        /* Loading state for button */
+        .show-dropdown.loading {
+            opacity: 0.7;
+            pointer-events: none;
         }
 
         /* Responsive design */
@@ -380,7 +345,7 @@
                 height: 100%;
                 z-index: 1000;
                 transform: translateX(-100%);
-                width: 260px; /* Ensure width is maintained on mobile */
+                width: 260px;
             }
             
             .sidebar.mobile-open {
@@ -388,15 +353,10 @@
             }
             
             .sidebar.collapsed {
-                width: 260px; /* Override the desktop collapsed width */
+                width: 260px;
                 transform: translateX(-100%);
             }
             
-            .quick-links {
-                flex-direction: column;
-            }
-            
-            /* Add overlay when sidebar is open on mobile */
             .mobile-overlay {
                 display: none;
                 position: fixed;
@@ -410,6 +370,15 @@
             
             .mobile-overlay.active {
                 display: block;
+            }
+
+            .grades-table {
+                font-size: 14px;
+            }
+
+            .grades-table th,
+            .grades-table td {
+                padding: 10px 8px;
             }
         }
     </style>
@@ -466,7 +435,7 @@
                         <ul class="submenu">
                             <li><a href="#">Personal Infos</a></li>
                             <li><a href="#">Student Activities</a></li>
-                            <li><a href="grades.html">Grades</a></li>
+                            <li><a href="#">Grades</a></li>
                             <li><a href="#">Student Groups</a></li>
                             <li><a href="#">Academic Consultancy</a></li>
                             <li><a href="#">Student Affairs System Advisor</a></li>
@@ -532,90 +501,32 @@
             </div>
             
             <div class="breadcrumb">
-                <a href="#"><i class="fas fa-home"></i></a> / Homepage
+                <a href="#"><i class="fas fa-home"></i></a> / Grades
             </div>
             
-            <!-- Committees Section -->
-            <div class="section committees">
-                <div class="section-header">
-                    <i class="fas fa-list"></i> Committees (2024-2025)
-                </div>
-                
-                <div class="committees-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Grade</th>
-                                <th>Committee</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Basic Medical Practices III</td>
-                                <td>2024-09-09</td>
-                                <td>2025-05-09</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Social and Scientific Components of Medicine III</td>
-                                <td>2024-09-09</td>
-                                <td>2025-05-09</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Cell and Tissue Injury</td>
-                                <td>2024-09-09</td>
-                                <td>2024-11-08</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Musculoskeletal System, Integumentary System and Related Disorders</td>
-                                <td>2024-11-11</td>
-                                <td>2025-01-10</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Circulatory-Respiratory System and Related Disorders</td>
-                                <td>2025-01-27</td>
-                                <td>2025-03-28</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Grade III</td>
-                                <td>Hematopoetic System and Related Disorders</td>
-                                <td>2025-03-31</td>
-                                <td>2025-05-09</td>
-                                <td><button class="show-btn">Show <i class="fas fa-chevron-down"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Quick Links -->
-            <div class="quick-links">
-                <a href="#" class="quick-link grade-calendar">Grade Calendar</a>
-                <a href="#" class="quick-link electronic-rollcall">Electronic Rollcall</a>
-                <a href="#" class="quick-link surveys">Surveys</a>
-                <a href="#" class="quick-link feedback">Feedback</a>
-            </div>
-            
-            <!-- Announcements Section -->
-            <div class="section announcements">
-                <div class="section-header">
-                    <i class="fas fa-bullhorn"></i> Announcements
-                </div>
-                <div class="all-announcements">
-                    <a href="#">All Announcements <i class="fas fa-plus"></i></a>
-                </div>
+            <!-- Grades Table -->
+            <div class="grades-container">
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Academic Year</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-2025</td>
+                            <td>Grade III</td>
+                            <td>
+                                <button class="show-dropdown" data-year="2024-2025" data-grade="Grade III">
+                                    Show
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -704,6 +615,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+    });
+
+    // Show dropdown button functionality - UPDATED
+    const showButtons = document.querySelectorAll('.show-dropdown');
+    showButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Get data from the button
+            const year = this.dataset.year;
+            const grade = this.dataset.grade;
+            
+            // Add loading state
+            this.classList.add('loading');
+            
+            // Option 1: Navigate to a specific URL
+            // Replace 'grade-details.html' with your actual page URL
+            const targetUrl = `grade-details.html?year=${encodeURIComponent(year)}&grade=${encodeURIComponent(grade)}`;
+            
+            // Option 2: You can also use a different URL structure
+            // const targetUrl = `grade-details/${year}/${grade}`;
+            
+            // Navigate to the new page
+            window.location.href = targetUrl;
+            
+            // Alternative navigation methods:
+            
+            // Option 3: Open in new tab/window
+            // window.open(targetUrl, '_blank');
+            
+            // Option 4: Use history API for single-page app navigation
+            // history.pushState({year: year, grade: grade}, '', targetUrl);
+            // loadGradeDetails(year, grade); // Your function to load content
+        });
     });
 });
     </script>
