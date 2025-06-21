@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Education System - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
     <style>
         /* General Styles */
         * {
@@ -143,7 +142,7 @@
             transform: translateY(-50%);
         }
 
-        /* Submenu styles - IMPORTANT FIX */
+        /* Submenu styles */
         .submenu {
             display: none;
             padding-left: 0;
@@ -172,6 +171,16 @@
             text-decoration: none;
         }
 
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .sidebar-footer img {
+            width: 100px;
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -180,24 +189,248 @@
             transition: all 0.3s ease;
         }
 
-        /* Rest of your CSS styles... */
-        
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            padding: 0 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .menu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .menu-toggle:hover {
+            background-color: #f5f5f5;
+        }
+
+        .student-tag {
+            background-color: #6c757d;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .top-bar-right {
+            margin-left: auto;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-btn i {
+            margin-left: 5px;
+        }
+
+        .breadcrumb {
+            padding: 15px 20px;
+            background-color: #f5f5f5;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .breadcrumb a {
+            color: #2d7dd2;
+            text-decoration: none;
+        }
+
+        /* Committees Section */
+        .section {
+            margin: 0 20px 20px;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            background-color: #2d7dd2;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header i {
+            margin-right: 10px;
+        }
+
+        .committees-table {
+            padding: 0;
+        }
+
+        .committees-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .committees-table th, 
+        .committees-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .committees-table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .committees-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .show-btn {
+            background-color: #2d7dd2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .show-btn i {
+            margin-left: 5px;
+        }
+
+        .show-btn:hover {
+            background-color: #1c6abd;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: flex;
+            gap: 15px;
+            margin: 0 20px 20px;
+        }
+
+        .quick-link {
+            flex: 1;
+            padding: 15px;
+            background-color: #5bc0de;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .quick-link:hover {
+            background-color: #46b8da;
+        }
+
+        /* Announcements Section */
+        .announcements {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .all-announcements {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .all-announcements a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .all-announcements i {
+            margin-left: 5px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+                width: 260px; /* Ensure width is maintained on mobile */
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar.collapsed {
+                width: 260px; /* Override the desktop collapsed width */
+                transform: translateX(-100%);
+            }
+            
+            .quick-links {
+                flex-direction: column;
+            }
+            
+            /* Add overlay when sidebar is open on mobile */
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            
+            .mobile-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobile-overlay"></div>
+        
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <!-- Sidebar header content -->
             <div class="sidebar-header">
-                <img id="logo-sidebar" src="images/logo.jpg" alt="University Logo">
+                <img id="logo-sidebar" src="pics/IMG_7937.jpg" alt="University Logo">
                 <h3>Faculty of Medicine</h3>
             </div>
             
             <!-- User profile content -->
             <div class="user-profile">
                 <div class="avatar">
-                    <img src="images/IMG_4108.jpg" alt="User Avatar">
+                    <img src="pics/IMG_4108.jpg" alt="User Avatar">
                 </div>
                 <div class="user-info">
                     <h4>UMMI MASAMAR MUDI ABDULMUMMUNI</h4>
@@ -230,6 +463,18 @@
                             <span>Student</span>
                             <span class="dropdown-icon"><i class="fas fa-chevron-down"></i></span>
                         </a>
+                        <ul class="submenu">
+                            <li><a href="#">Personal Infos</a></li>
+                            <li><a href="#">Student Activities</a></li>
+                            <li><a href="#">Grades</a></li>
+                            <li><a href="#">Student Groups</a></li>
+                            <li><a href="#">Academic Consultancy</a></li>
+                            <li><a href="#">Student Affairs System Advisor</a></li>
+                            <li><a href="#">Grade Calendar</a></li>
+                            <li><a href="#">Electronic Rollcall</a></li>
+                            <li><a href="#">Elections</a></li>
+                            <li><a href="#">Social Responsibility Projects</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link">
@@ -268,7 +513,7 @@
             </nav>
             
             <div class="sidebar-footer">
-                <img src="images/IMG_4107.jpg" alt="Medu">
+                <img src="pics/IMG_4107.jpg" alt="Medu">
             </div>
         </div>
         
@@ -380,26 +625,60 @@ document.addEventListener('DOMContentLoaded', function () {
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    // Check if we're on mobile
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
 
     // Toggle sidebar when menu button is clicked
     if (menuToggle) {
         menuToggle.addEventListener('click', function (e) {
-            e.stopPropagation(); // prevent the body click from triggering
+            e.stopPropagation();
 
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
+            if (isMobile()) {
+                // Mobile behavior
+                sidebar.classList.toggle('mobile-open');
+                mobileOverlay.classList.toggle('active');
+            } else {
+                // Desktop behavior
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
         });
     }
 
-    // Close sidebar if clicking outside of it
+    // Close sidebar when overlay is clicked (mobile only)
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', function () {
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+        });
+    }
+
+    // Close sidebar if clicking outside of it (desktop only)
     document.addEventListener('click', function (e) {
-        if (
+        if (!isMobile() && 
             sidebar &&
             !sidebar.contains(e.target) &&
             !menuToggle.contains(e.target) &&
-            !sidebar.classList.contains('collapsed') // only collapse if it's open
+            !sidebar.classList.contains('collapsed')
         ) {
             sidebar.classList.add('collapsed');
+            mainContent.classList.remove('expanded');
+        }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (!isMobile()) {
+            // Remove mobile classes when switching to desktop
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+        } else {
+            // Remove desktop classes when switching to mobile
+            sidebar.classList.remove('collapsed');
             mainContent.classList.remove('expanded');
         }
     });
@@ -413,7 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (navLink) {
             navLink.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopPropagation(); // prevent closing sidebar when dropdown clicked
+                e.stopPropagation();
 
                 item.classList.toggle('open');
 
@@ -427,7 +706,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
     </script>
 </body>
 </html>
