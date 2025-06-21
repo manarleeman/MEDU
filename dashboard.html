@@ -376,31 +376,47 @@
     </div>
 
     <script>
-       // ESSENTIAL JAVASCRIPT FIXES (replace your existing script):
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar toggle functionality
+document.addEventListener('DOMContentLoaded', function () {
     const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+
+    // Toggle sidebar when menu button is clicked
     if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('main-content').classList.toggle('expanded');
+        menuToggle.addEventListener('click', function (e) {
+            e.stopPropagation(); // prevent the body click from triggering
+
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
         });
     }
-    
+
+    // Close sidebar if clicking outside of it
+    document.addEventListener('click', function (e) {
+        if (
+            sidebar &&
+            !sidebar.contains(e.target) &&
+            !menuToggle.contains(e.target) &&
+            !sidebar.classList.contains('collapsed') // only collapse if it's open
+        ) {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.remove('expanded');
+        }
+    });
+
     // Dropdown functionality for sidebar items
     const dropdownItems = document.querySelectorAll('.nav-item.dropdown');
-    
+
     dropdownItems.forEach(item => {
         const navLink = item.querySelector('.nav-link');
-        
+
         if (navLink) {
-            navLink.addEventListener('click', function(e) {
+            navLink.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopPropagation();
-                
-                // Toggle current dropdown
+                e.stopPropagation(); // prevent closing sidebar when dropdown clicked
+
                 item.classList.toggle('open');
-                
+
                 // Toggle icon
                 const icon = item.querySelector('.dropdown-icon i');
                 if (icon) {
@@ -411,6 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
     </script>
 </body>
 </html>
